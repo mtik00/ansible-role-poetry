@@ -1,0 +1,8 @@
+---
+
+- name: Set facts
+  ansible.builtin.include_tasks: facts.yml
+
+- name: Install Poetry
+  ansible.builtin.include_tasks: poetry.yml
+  when: not poetry_exists

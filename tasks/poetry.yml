@@ -1,0 +1,30 @@
+---
+
+- name: Debug output
+  ansible.builtin.debug:
+    msg: "Installing poetry"
+    verbosity: 1
+
+- name: Download Poetry installer
+  ansible.builtin.get_url:
+    url: https://install.python-poetry.org
+    dest: "{{ tmp_install_path }}"
+    mode: "0700"
+
+- name: Install Poetry
+  ansible.builtin.command:  # noqa: command-instead-of-module
+    cmd: python3 {{ tmp_install_path }}
+  changed_when: false
+
+- name: Find the new executable  # noqa: command-instead-of-shell
+  ansible.builtin.shell: command -v poetry
+  register: poetry_bin
+  changed_when: false
+
+- name: Show Poetry install location
+  ansible.builtin.debug:
+    msg: "{{ poetry_bin.stdout }}"
+
+- name: Delete Poetry installer
+  ansible.builtin.file:
+    path: "{{ tmp_install_path }}"
